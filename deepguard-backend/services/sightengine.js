@@ -5,7 +5,7 @@ const fs = require('fs');
 exports.analyze = async (filePath) => {
   const form = new FormData();
   form.append('media', fs.createReadStream(filePath));
-  form.append('models', 'deepfake');
+  form.append('models', 'nudity');  // ✅ Changed from 'deepfake' to 'nudity'
   form.append('api_user', process.env.SIGHTENGINE_USER);
   form.append('api_secret', process.env.SIGHTENGINE_SECRET);
 
@@ -16,11 +16,12 @@ exports.analyze = async (filePath) => {
       { headers: form.getHeaders() }
     );
 
-    const score = response.data.deepfake?.score || 0;
+    // Example nudity result extraction (adjust as needed)
+    const score = response.data.nudity?.raw || 0;
     return {
       detected: score > 0.5,
       confidence: score,
-      message: score > 0.5 ? 'Deepfake detected' : 'No manipulation detected'
+      message: score > 0.5 ? 'Nudity detected' : 'No nudity detected'
     };
   } catch (err) {
     if (err.response) {
